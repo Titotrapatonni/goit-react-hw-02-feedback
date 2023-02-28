@@ -1,5 +1,9 @@
 import { Component } from 'react';
 import { Section } from './Section/Section';
+import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
+import { Statistics } from './Statistics/Statistics';
+
+// import PropTypes from 'prop-types';
 
 export class App extends Component {
   state = {
@@ -7,9 +11,9 @@ export class App extends Component {
     neutral: 0,
     bad: 0,
   };
-  addFeedback = name => {
+  addFeedback = key => {
     this.setState(prevState => {
-      return { [name]: (prevState[name] += 1) };
+      return { [key]: (prevState[key] += 1) };
     });
   };
 
@@ -21,14 +25,22 @@ export class App extends Component {
   }
 
   render() {
+    const { good, neutral, bad } = this.state;
     return (
-      <Section
-        title="Please leave feedback"
-        total={this.countTotalFeedback()}
-        percentage={this.countPositiveFeedbackPercentage()}
-        stats={this.state}
-        push={this.addFeedback}
-      ></Section>
+      <Section title="Please leave feedback">
+        <FeedbackOptions
+          options={Object.keys(this.state)}
+          onLeaveFeedback={this.addFeedback}
+        ></FeedbackOptions>
+
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={this.countTotalFeedback()}
+          percentage={this.countPositiveFeedbackPercentage()}
+        ></Statistics>
+      </Section>
     );
   }
 }
